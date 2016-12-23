@@ -1,0 +1,41 @@
+body {
+	margin: 0px;
+}
+
+#page {
+	display: flex;
+	flex-direction: column;
+	width: 100vw;
+	height: 100vh;
+}
+
+#editor {
+	flex: 1;
+}
+
+#upload {
+	float: right;
+	margin: 0px;
+	padding: 10px;
+
+	font-size: 15px;
+	color: white;
+
+	background-color: #fb4251;
+	border: none;
+	border-radius: 5px 0px 0px 5px;
+}
+
+pre {
+	width: 95%;
+	height: 300px;
+	overflow: scroll;
+	padding: 5px;
+	margin: 5px auto;
+	
+	background-color: #eee;
+}
+
+.success {
+	font-family: sans-serif;
+}

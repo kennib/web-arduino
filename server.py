@@ -31,6 +31,11 @@ bottle.TEMPLATE_PATH.append('./templates')
 def ace(filename):
 	return static_file(filename, root='./ace')
 
+# CSS static files
+@route('/css/<filename:path>')
+def ace(filename):
+	return static_file(filename, root='./css')
+
 # Index page
 @route('/')
 def index():
@@ -90,7 +95,7 @@ def upload(serial):
 		if upload.returncode:
 			return template('error', error=upload.stderr)
 
-	return template('<p ic-remove-after="2500ms">{{ message }}</p>', message='Uploaded!')
+	return template('success', message='Uploaded!')
 
 
 if __name__ == '__main__':

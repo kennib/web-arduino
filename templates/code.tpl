@@ -2,14 +2,24 @@
 <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
 <script src="http://cdn.intercoolerjs.org/intercooler-1.0.3.min.js"></script>
 
-<textarea name="code" id="code" style="display: none;"></textarea>
-<div id="editor" name="code" style="width:100%; height:80%;">{{ code }}</div>
-<button ic-post-to="/{{ serial }}" ic-include="#code" ic-target="#error"
-onclick="$('#code').val(editor.getSession().getValue());">
-	Upload <i class="fa fa-spinner fa-spin ic-indicator" style="display:none"></i>
-</button>
+<link rel="stylesheet" href="/css/editor.css">
 
-<div id="error">
+<div id="page">
+	<textarea name="code" id="code" style="display: none;"></textarea>
+	<div id="editor" name="code">{{ code }}</div>
+
+	<div class="ace-vibrant-ink">
+	<button id="upload"
+	ic-post-to="/{{ serial }}" ic-include="#code" ic-target="#message"
+	onclick="$('#code').val(editor.getSession().getValue());">
+		<i class="fa fa-upload"></i>
+		Upload
+		<i class="fa fa-spinner fa-spin ic-indicator" style="display:none"></i>
+	</button>
+	</div>
+
+	<div id="message">
+	</div>
 </div>
 
 <script src="/ace/ace.js" type="text/javascript" charset="utf-8"></script>
