@@ -42,13 +42,13 @@ def index():
 @route('/<serial:re:\w+>')
 def code(serial):
 	default_code = open(path.join(CODE_DIR, 'examples', 'Blink.ino')).read()
-	return template('code', code=default_code)
+	return template('code', serial=serial, code=default_code)
 
 # Code submission page (per board)
 @post('/<serial:re:\w+>')
 def upload(serial):
 	# The submitted code
-	code = request.params['code']
+	code = request.params.get('code')
 
 	# Get absolute paths for the makefile, code and board
 	makefile = path.abspath(MAKEFILE)
@@ -72,10 +72,12 @@ def upload(serial):
 			'BOARD_SUB='+BOARD_SUB,
 			'MONITOR_PORT='+device
 		],
-		check=True)
-		#stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-		upload = subprocess.call(['make',
+		if build.returncode:
+			return template('error', error=build.stderr)
+
+		upload = subprocess.run(['make',
 			'-C', board_dir,
 			'upload',
 			'ARDUINO_DIR='+ARDUINO_DIR,
@@ -83,11 +85,12 @@ def upload(serial):
 			'BOARD_SUB='+BOARD_SUB,
 			'MONITOR_PORT='+device
 		],
-		)
-		#check=True)
-		#stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-	return template('code', code=code)
+		if upload.returncode:
+			return template('error', error=upload.stderr)
+
+	return template('<p ic-remove-after="2500ms">{{ message }}</p>', message='Uploaded!')
 
 
 if __name__ == '__main__':
