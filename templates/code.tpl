@@ -5,7 +5,7 @@
 
 <script src="/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
-    var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/vibrant_ink");
-    editor.getSession().setMode("ace/mode/arduino");
+	var editor = ace.edit("editor");
+	editor.setTheme("ace/theme/vibrant_ink");
+	editor.getSession().setMode("ace/mode/arduino");
 </script>

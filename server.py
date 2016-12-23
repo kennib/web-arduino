@@ -3,7 +3,7 @@
 import subprocess
 from os import listdir, chdir, path
 import bottle
-from bottle import route, post, request, run, template
+from bottle import route, post, request, run, template, static_file
 
 # Get web arduino config
 from configparser import SafeConfigParser
@@ -25,6 +25,11 @@ PORT = config.get('web', 'port')
 
 # Templates directory
 bottle.TEMPLATE_PATH.append('./templates')
+
+# Ace text editor static files
+@route('/ace/<filename:path>')
+def ace(filename):
+	return static_file(filename, root='./ace')
 
 # Index page
 @route('/')
