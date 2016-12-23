@@ -1,5 +1,6 @@
 #/usr/bin/env python3
 
+import re
 import subprocess
 from os import listdir, chdir, path
 import bottle
@@ -80,7 +81,8 @@ def upload(serial):
 		stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 		if build.returncode:
-			return template('error', error=build.stderr)
+			error = re.sub('make:.*|.*?Arduino.mk:\d+: ', '', build.stderr.decode())
+			return template('error', error=error)
 
 		upload = subprocess.run(['make',
 			'-C', board_dir,
@@ -93,7 +95,8 @@ def upload(serial):
 		stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 		if upload.returncode:
-			return template('error', error=upload.stderr)
+			error = re.sub('make:.*|.*?Arduino.mk:\d+: ', '', upload.stderr.decode())
+			return template('error', error=error)
 
 	return template('success', message='Uploaded!')
 
