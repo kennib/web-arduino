@@ -2,6 +2,7 @@
 
 import subprocess
 from os import listdir, chdir, path
+import bottle
 from bottle import route, post, request, run, template
 
 # Get web arduino config
@@ -22,50 +23,21 @@ CODE_DIR = config.get('arduino', 'code_dir')
 HOST = config.get('web', 'host')
 PORT = config.get('web', 'port')
 
-BOARD_LIST = '''
-<ul>
-% for board in boards:
-	<li>
-		<a href="/{{board}}">Board {{ board }}</a>
-	</li>
-% end
-</ul>
-% if len(boards) == 0:
-	<h2>No boards connected</h2>
-% end
-'''
-
-CODE_INPUT = '''
-<form method="POST">
-	<textarea name=code style="width:100%; height:80%;">{{ code }}</textarea>
-	<input type="submit" value="Upload"></input>
-</form>
-'''
-
-BLINK_CODE = '''
-void setup() {
-	pinMode(13, OUTPUT);
-}
-
-void loop() {
-	digitalWrite(13, HIGH);
-	delay(1000);
-	digitalWrite(13, LOW);
-	delay(1000);
-}
-'''
+# Templates directory
+bottle.TEMPLATE_PATH.append('./templates')
 
 # Index page
 @route('/')
 def index():
 	devices = listdir(path=DEVICE_DIR)
 	boards = [device.lstrip(DEVICE_PREFIX) for device in devices if device.startswith(DEVICE_PREFIX)]
-	return template(BOARD_LIST, boards=boards)
+	return template('boards', boards=boards)
 
 # Code writing page (per board)
 @route('/<serial:re:\w+>')
 def code(serial):
-    return template(CODE_INPUT, code=BLINK_CODE)
+	default_code = open(path.join(CODE_DIR, 'examples', 'Blink.ino')).read()
+	return template('code', code=default_code)
 
 # Code submission page (per board)
 @post('/<serial:re:\w+>')
@@ -110,7 +82,7 @@ def upload(serial):
 		#check=True)
 		#stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
-	return template(CODE_INPUT, code=code)
+	return template('code', code=code)
 
 
 if __name__ == '__main__':
