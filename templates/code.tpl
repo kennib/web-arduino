@@ -11,6 +11,7 @@
 	<div class="ace-vibrant-ink">
 	<button id="upload"
 	ic-post-to="/{{ serial }}" ic-include="#code" ic-target="#message"
+	ic-on-success="addHistory()"
 	onclick="$('#code').val(editor.getSession().getValue());">
 		<i class="fa fa-upload"></i>
 		Upload
@@ -25,6 +26,18 @@
 <script src="/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
 	var editor = ace.edit("editor");
+	editor.$blockScrolling = Infinity;
 	editor.setTheme("ace/theme/vibrant_ink");
 	editor.getSession().setMode("ace/mode/arduino");
+
+	window.onpopstate = function(event) {
+		editor.setValue(event.state.code);
+		editor.clearSelection();
+	};
+
+	var editNum = 0;
+	function addHistory() {
+		var codeState = {code: $('#code').val()};
+		history.pushState(codeState, 'Arduino - edit: '+(editNum++), '?'+$.param(codeState));
+	}
 </script>

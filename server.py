@@ -47,8 +47,11 @@ def index():
 # Code writing page (per board)
 @route('/<serial:re:\w+>')
 def code(serial):
-	default_code = open(path.join(CODE_DIR, 'examples', 'Blink.ino')).read()
-	return template('code', serial=serial, code=default_code)
+	code = request.params.get('code')
+	if not code:
+		code = open(path.join(CODE_DIR, 'examples', 'Blink.ino')).read()
+
+	return template('code', serial=serial, code=code)
 
 # Code submission page (per board)
 @post('/<serial:re:\w+>')
