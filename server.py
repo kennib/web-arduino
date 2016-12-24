@@ -21,6 +21,7 @@ BOARD_SUB = config.get('arduino', 'board_sub', fallback=None)
 
 MAKEFILE = config.get('arduino', 'makefile_path', fallback='./Makefile')
 CODE_DIR = config.get('arduino', 'code_dir', fallback='./code')
+EXAMPLES_DIR = config.get('arduino', 'examples_dir', fallback='./code/examples')
 BOARD_NAMES = config.get('arduino', 'board_names', fallback='').split(',')
 INIT_PROGRAM_TEMPLATE = config.get('arduino', 'init_program_template', fallback='./code/init/Init.tpl')
 
@@ -39,6 +40,16 @@ def ace(filename):
 @route('/css/<filename:path>')
 def ace(filename):
 	return static_file(filename, root='./css')
+
+# Example code static files
+@route('/examples')
+def examples():
+	examples = listdir(EXAMPLES_DIR)
+	return template('examples', examples=examples)
+
+@route('/examples/<filename:path>')
+def examples(filename):
+	return static_file(filename, root=EXAMPLES_DIR)
 
 # Index page
 @route('/')

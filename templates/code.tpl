@@ -9,6 +9,10 @@
 	<div id="editor" name="code">{{ code }}</div>
 
 	<div class="ace-vibrant-ink">
+	<a href="/examples" id="examples" target="_blank">
+		<i class="fa fa-file-code-o"></i>
+		Example Code
+	</a>
 	<button id="upload"
 	ic-post-to="/{{ serial }}" ic-include="#code" ic-target="#message"
 	ic-on-success="addHistory()"
