@@ -21,6 +21,7 @@ BOARD_SUB = config.get('arduino', 'board_sub', fallback=None)
 
 MAKEFILE = config.get('arduino', 'makefile_path', fallback='./Makefile')
 CODE_DIR = config.get('arduino', 'code_dir', fallback='./code')
+HEADERS_DIR = config.get('arduino', 'headers_dir', fallback='./code/headers')
 EXAMPLES_DIR = config.get('arduino', 'examples_dir', fallback='./code/examples')
 BOARD_NAMES = config.get('arduino', 'board_names', fallback='').split(',')
 INIT_PROGRAM_TEMPLATE = config.get('arduino', 'init_program_template', fallback='./code/init/Init.tpl')
@@ -49,7 +50,7 @@ def examples():
 
 @route('/examples/<filename:path>')
 def examples(filename):
-	return static_file(filename, root=EXAMPLES_DIR)
+	return static_file(filename, root=EXAMPLES_DIR, mimetype='text/plain')
 
 # Index page
 @route('/')
@@ -129,6 +130,7 @@ def upload_code(serial, code):
 	# Get absolute paths for the makefile, code and board
 	makefile = path.abspath(MAKEFILE)
 	code_dir = path.abspath(CODE_DIR)
+	headers_dir = path.abspath(HEADERS_DIR)
 	board_dir = path.abspath(path.join(code_dir, serial))
 	device = path.join(DEVICE_DIR, DEVICE_PREFIX+serial)
 
@@ -136,6 +138,8 @@ def upload_code(serial, code):
 	if path.commonpath([code_dir, board_dir]) == code_dir:
 		subprocess.run(['mkdir', '-p', board_dir], check=True)
 		subprocess.run(['ln', '-F', '-s', makefile, board_dir])
+		for header in listdir(headers_dir):
+			subprocess.run(['ln', '-F', '-s', path.join(headers_dir, header), board_dir])
 
 		# Write, compile and upload the code
 		with open(path.join(board_dir, 'Code.ino'), 'w') as code_file:
