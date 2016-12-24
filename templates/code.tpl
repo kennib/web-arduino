@@ -9,6 +9,10 @@
 	<div id="editor" name="code">{{ code }}</div>
 
 	<div class="ace-vibrant-ink">
+	<a href="/" id="boards">
+		<i class="fa fa-microchip"></i>
+		Boards
+	</a>
 	<a href="/examples" id="examples" target="_blank">
 		<i class="fa fa-file-code-o"></i>
 		Example Code
