@@ -42,7 +42,8 @@ def ace(filename):
 def index():
 	if DEVICE_DIR:
 		devices = listdir(path=DEVICE_DIR)
-		boards = [device.lstrip(DEVICE_PREFIX) for device in devices if device.startswith(DEVICE_PREFIX)]
+		serials = [device.lstrip(DEVICE_PREFIX) for device in devices if device.startswith(DEVICE_PREFIX)]
+		boards = [{'id': id, 'serial': serial} for id, serial in enumerate(serials)]
 		no_config = False
 	else:
 		boards = []

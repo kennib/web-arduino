@@ -1,0 +1,54 @@
+#boards {
+	display: flex;
+	flex-wrap: wrap;
+	-webkit-margin-before: 0px;
+	-webkit-padding-start: 0px;
+	list-style: none;
+}
+
+#boards a {
+	text-decoration: none;
+}
+
+.board {
+	width: 300px;
+	height: 150px;
+	margin: 10px;
+	padding: 10px;
+	
+	background-color: rgb(41, 131, 4);
+}
+
+	.lcd {
+		padding: 5px;
+
+		text-align: center;
+		font-family: monospace;
+		font-size: 30px;
+		color: black;
+
+		background-color: rgb(164, 255, 43);
+	}
+
+	.shift-register {
+		margin: 35px;
+
+		text-align: center;
+	}
+		
+		.led-on, .led-off {
+			display: inline-block;
+			height: 20px;
+			width: 15px;
+			margin: 4px;
+			border-radius: 15px;
+		}
+
+		.led-on {
+			background-color: red;
+			box-shadow: 0px 0px 3px 3px red;
+		}
+
+		.led-off {
+			background-color: grey;
+		}

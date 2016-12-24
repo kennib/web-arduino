@@ -1,7 +1,26 @@
-<ul>
+<link rel="stylesheet" href="https://opensource.keycdn.com/fontawesome/4.7.0/font-awesome.min.css" integrity="sha384-dNpIIXE8U05kAbPhy3G1cz+yZmTzA6CY8Vg/u2L9xRnHjJiAK76m2BIEaSEV+/aU" crossorigin="anonymous">
+
+<link rel="stylesheet" href="/css/boards.css">
+
+<ul id="boards">
 % for board in boards:
 	<li>
-		<a href="/{{board}}">Board {{ board }}</a>
+		<a href="/{{ board['serial'] }}">
+			<div class="board">
+				<div class="lcd">
+					Board {{ board['serial'] }}
+				</div>
+				<div class="shift-register">
+				% for led in bin(board['id']).lstrip('0b').rjust(8, '0'):
+					% if led == '1':
+						<i class="led-on"></i>
+					% else:
+						<i class="led-off"></i>
+					% end
+				% end
+				</div>
+			</div>
+		</a>
 	</li>
 % end
 </ul>
