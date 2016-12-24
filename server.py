@@ -12,17 +12,17 @@ from configparser import SafeConfigParser
 config = SafeConfigParser()
 config.read('config.ini')
 
-ARDUINO_DIR = config.get('arduino', 'arduino_dir')
-DEVICE_DIR = config.get('arduino', 'device_dir')
-DEVICE_PREFIX = config.get('arduino', 'device_prefix')
-BOARD_TAG = config.get('arduino', 'board_tag')
-BOARD_SUB = config.get('arduino', 'board_sub')
+ARDUINO_DIR = config.get('arduino', 'arduino_dir', fallback=None)
+DEVICE_DIR = config.get('arduino', 'device_dir', fallback=None)
+DEVICE_PREFIX = config.get('arduino', 'device_prefix', fallback=None)
+BOARD_TAG = config.get('arduino', 'board_tag', fallback=None)
+BOARD_SUB = config.get('arduino', 'board_sub', fallback=None)
 
-MAKEFILE = config.get('arduino', 'makefile_path')
-CODE_DIR = config.get('arduino', 'code_dir')
+MAKEFILE = config.get('arduino', 'makefile_path', fallback='./Makefile')
+CODE_DIR = config.get('arduino', 'code_dir', fallback='./code')
 
-HOST = config.get('web', 'host')
-PORT = config.get('web', 'port')
+HOST = config.get('web', 'host', fallback='127.0.0.1')
+PORT = config.get('web', 'port', fallback='8888')
 
 # Templates directory
 bottle.TEMPLATE_PATH.append('./templates')
@@ -40,9 +40,15 @@ def ace(filename):
 # Index page
 @route('/')
 def index():
-	devices = listdir(path=DEVICE_DIR)
-	boards = [device.lstrip(DEVICE_PREFIX) for device in devices if device.startswith(DEVICE_PREFIX)]
-	return template('boards', boards=boards)
+	if DEVICE_DIR:
+		devices = listdir(path=DEVICE_DIR)
+		boards = [device.lstrip(DEVICE_PREFIX) for device in devices if device.startswith(DEVICE_PREFIX)]
+		no_config = False
+	else:
+		boards = []
+		no_config = True
+
+	return template('boards', boards=boards, no_config=no_config)
 
 # Code writing page (per board)
 @route('/<serial:re:\w+>')
