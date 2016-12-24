@@ -1,6 +1,7 @@
 #/usr/bin/env python3
 
 import re
+import pickle
 import subprocess
 from os import listdir, chdir, path
 import bottle
@@ -89,8 +90,24 @@ def init():
 def get_boards():
 	devices = listdir(path=DEVICE_DIR)
 	serials = [device.lstrip(DEVICE_PREFIX) for device in devices if device.startswith(DEVICE_PREFIX)]
+
+	# Get a custom name if a list of them exists
 	if BOARD_NAMES:
-		boards = [{'id': id, 'serial': serial, 'name': BOARD_NAMES[id]} for id, serial in enumerate(serials)]
+		# To make sure the names are consistent we save the to a file
+		try:
+			serial2name = pickle.load(open('.serial2name.pickle', 'rb'))
+		except FileNotFoundError as e:
+			serial2name = {}
+
+		# Assign a new name if we don't have one for each board already
+		for serial in serials:
+			if serial not in serial2name:
+				serial2name[serial] = BOARD_NAMES[len(serial2name.keys())]
+
+		# Save the serial/name table
+		pickle.dump(serial2name, open('.serial2name.pickle', 'wb'))
+
+		boards = [{'id': id, 'serial': serial, 'name': serial2name.get(serial, serial)} for id, serial in enumerate(serials)]
 	else:
 		boards = [{'id': id, 'serial': serial, 'name': serial} for id, serial in enumerate(serials)]
 
