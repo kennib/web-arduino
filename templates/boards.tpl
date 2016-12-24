@@ -8,7 +8,7 @@
 		<a href="/{{ board['serial'] }}">
 			<div class="board">
 				<div class="lcd">
-					Board {{ board['serial'] }}
+					{{ board['name'] }}
 				</div>
 				<div class="shift-register">
 				% for led in bin(board['id']).lstrip('0b').rjust(8, '0'):
