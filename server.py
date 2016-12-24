@@ -69,7 +69,7 @@ def index():
 def code(serial):
 	code = request.params.get('code')
 	if not code:
-		code = open(path.join(CODE_DIR, 'examples', 'Blink.ino')).read()
+		code = open(path.join(CODE_DIR, 'examples', 'Empty.ino')).read()
 
 	return template('code', serial=serial, code=code)
 
